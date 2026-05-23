@@ -1,0 +1,142 @@
+# EssentialsFolia Configuration
+# https://github.com/myream2003/essentials
+
+# ========================
+# General Settings
+# ========================
+general:
+  # Server prefix for messages
+  prefix: '&8[&aEssentials&8]&r '
+  # Date/time format used in messages
+  date-format: 'dd.MM.yyyy HH:mm'
+  # Locale for number formatting (e.g. de_DE, en_US)
+  locale: 'de_DE'
+
+# ========================
+# Teleport Settings
+# ========================
+teleport:
+  # Delay in seconds before teleport executes (0 = instant)
+  delay: 3
+  # Time in seconds a TPA request stays valid
+  tpa-expire: 60
+  # Whether to cancel teleport if the player moves during the countdown
+  cancel-on-move: true
+  # Cooldown in seconds between /back uses (0 = no cooldown)
+  back-cooldown: 0
+  # Whether to save location before /spawn teleport for /back
+  save-on-spawn: true
+  # Cooldown in seconds between /spawn uses
+  spawn-cooldown: 0
+  # Cooldown in seconds between /home uses
+  home-cooldown: 0
+
+# ========================
+# Home Settings
+# ========================
+homes:
+  # Default maximum number of homes per player
+  max-homes: 1
+  # Permission-based home limits (permission: limit)
+  # Example: essentials.homes.5: 5
+  limit-permission-prefix: 'essentials.homes.'
+
+# ========================
+# AFK Settings
+# ========================
+afk:
+  # Time in seconds without movement/interaction until auto-AFK
+  auto-afk: 300
+  # Whether to kick AFK players after a certain time (0 = disable)
+  auto-afk-kick: 0
+  # AFK suffix added to display name
+  afk-display: '&7[AFK]'
+
+# ========================
+# Chat Settings
+# ========================
+chat:
+  # Format for private messages
+  msg-format: '&7[&f{sender} &7-> &f{receiver}&7] &f{message}'
+  # Format for private messages (receiving end)
+  msg-format-receive: '&7[&f{sender} &7-> &fMe&7] &f{message}'
+  # Whether to log private messages to console
+  log-private-messages: true
+  # Whether to enable /socialspy by default for staff
+  socialspy: true
+
+# ========================
+# Spawn Settings
+# ========================
+spawn:
+  # World name for spawn (empty = default world)
+  world: ''
+
+# ========================
+# Economy Settings
+# ========================
+economy:
+  # Whether to enable economy features (requires Vault)
+  enabled: false
+  # Currency symbol
+  currency-symbol: '$'
+  # Starting balance for new players
+  starting-balance: 100.0
+
+# ========================
+# Kit Settings
+# ========================
+kits:
+  # Define kits here
+  # Format:
+  # <kit-name>:
+  #   cooldown: <seconds> (0 = no cooldown)
+  #   permission: essentials.kit.<name>
+  #   items:
+  #     - 'material:amount[:damage][:displayname][:lore]'
+  starter:
+    cooldown: 0
+    permission: essentials.kit.starter
+    items:
+      - 'IRON_SWORD:1'
+      - 'BREAD:16'
+      - 'IRON_PICKAXE:1'
+      - 'IRON_AXE:1'
+      - 'IRON_SHOVEL:1'
+      - 'IRON_HELMET:1'
+      - 'IRON_CHESTPLATE:1'
+      - 'IRON_LEGGINGS:1'
+      - 'IRON_BOOTS:1'
+
+  vip:
+    cooldown: 86400
+    permission: essentials.kit.vip
+    items:
+      - 'DIAMOND_SWORD:1'
+      - 'COOKED_BEEF:32'
+      - 'DIAMOND_PICKAXE:1'
+      - 'DIAMOND_HELMET:1'
+      - 'DIAMOND_CHESTPLATE:1'
+      - 'DIAMOND_LEGGINGS:1'
+      - 'DIAMOND_BOOTS:1'
+
+# ========================
+# Warp Settings
+# ========================
+warps:
+  # Cooldown in seconds between /warp uses (0 = no cooldown)
+  cooldown: 0
+  # Whether players need permission for each individual warp
+  # Permission: essentials.warp.<name>
+  per-warp-permission: false
+
+# ========================
+# Nick Settings
+# ========================
+nick:
+  # Prefix added to nicknames (empty = none)
+  prefix: '~'
+  # Maximum nickname length (0 = unlimited)
+  max-length: 16
+  # Whether to strip color codes from nicknames without essentials.nick.color
+  strip-colors: true

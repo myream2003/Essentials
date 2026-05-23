@@ -1,0 +1,314 @@
+name: EssentialsFolia
+version: '${project.version}'
+main: de.myream.essentialsfolia.EssentialsFolia
+api-version: '1.21'
+folia-supported: true
+description: Professional Essentials plugin for Folia-based Minecraft servers
+authors: [myream2003]
+website: https://github.com/myream2003/essentials
+
+commands:
+  # --- Teleport ---
+  tp:
+    description: Teleport to a player or coordinates
+    usage: /tp <player> | /tp <x> <y> <z> [world]
+    permission: essentials.tp
+  tpa:
+    description: Request to teleport to a player
+    usage: /tpa <player>
+    permission: essentials.tpa
+  tpahere:
+    description: Request a player to teleport to you
+    usage: /tpahere <player>
+    permission: essentials.tpahere
+  tpaccept:
+    description: Accept a teleport request
+    usage: /tpaccept
+    permission: essentials.tpaccept
+    aliases: [tpyes]
+  tpdeny:
+    description: Deny a teleport request
+    usage: /tpdeny
+    permission: essentials.tpdeny
+    aliases: [tpno]
+  back:
+    description: Teleport to your last location
+    usage: /back
+    permission: essentials.back
+  spawn:
+    description: Teleport to spawn
+    usage: /spawn
+    permission: essentials.spawn
+  setspawn:
+    description: Set the server spawn
+    usage: /setspawn
+    permission: essentials.setspawn
+
+  # --- Homes ---
+  home:
+    description: Teleport to a home
+    usage: /home [name] [player:home]
+    permission: essentials.home
+  sethome:
+    description: Set a home at your current location
+    usage: /sethome [name]
+    permission: essentials.sethome
+  delhome:
+    description: Delete a home
+    usage: /delhome [name] [player:home]
+    permission: essentials.delhome
+  homes:
+    description: List your homes
+    usage: /homes [player]
+    permission: essentials.homes
+
+  # --- Warps ---
+  warp:
+    description: Teleport to a warp
+    usage: /warp <name>
+    permission: essentials.warp
+  setwarp:
+    description: Create a warp at your location
+    usage: /setwarp <name>
+    permission: essentials.setwarp
+  delwarp:
+    description: Delete a warp
+    usage: /delwarp <name>
+    permission: essentials.delwarp
+  warps:
+    description: List all warps
+    usage: /warps
+    permission: essentials.warps
+
+  # --- Player ---
+  heal:
+    description: Heal a player
+    usage: /heal [player]
+    permission: essentials.heal
+  feed:
+    description: Feed a player
+    usage: /feed [player]
+    permission: essentials.feed
+  fly:
+    description: Toggle fly mode
+    usage: /fly [player] [on|off]
+    permission: essentials.fly
+  god:
+    description: Toggle god mode
+    usage: /god [player] [on|off]
+    permission: essentials.god
+  speed:
+    description: Set walk or fly speed
+    usage: /speed <speed> [player]
+    permission: essentials.speed
+  vanish:
+    description: Toggle vanish mode
+    usage: /vanish [player] [on|off]
+    permission: essentials.vanish
+    aliases: [v]
+  nick:
+    description: Set a nickname
+    usage: /nick [player] <nickname|off>
+    permission: essentials.nick
+  afk:
+    description: Toggle AFK mode
+    usage: /afk [message]
+    permission: essentials.afk
+  ping:
+    description: Check your or another player's ping
+    usage: /ping [player]
+    permission: essentials.ping
+
+  # --- Chat ---
+  msg:
+    description: Send a private message
+    usage: /msg <player> <message>
+    permission: essentials.msg
+    aliases: [tell, pm, m, w]
+  reply:
+    description: Reply to the last private message
+    usage: /reply <message>
+    permission: essentials.reply
+    aliases: [r]
+  broadcast:
+    description: Broadcast a message to all players
+    usage: /broadcast <message>
+    permission: essentials.broadcast
+    aliases: [bc]
+
+  # --- World ---
+  gamemode:
+    description: Change gamemode
+    usage: /gamemode <survival|creative|adventure|spectator> [player]
+    permission: essentials.gamemode
+    aliases: [gm]
+  gms:
+    description: Switch to survival mode
+    usage: /gms [player]
+    permission: essentials.gamemode
+  gmc:
+    description: Switch to creative mode
+    usage: /gmc [player]
+    permission: essentials.gamemode
+  gma:
+    description: Switch to adventure mode
+    usage: /gma [player]
+    permission: essentials.gamemode
+  gmsp:
+    description: Switch to spectator mode
+    usage: /gmsp [player]
+    permission: essentials.gamemode
+  give:
+    description: Give items to a player
+    usage: /give [player] <item> [amount]
+    permission: essentials.give
+  item:
+    description: Give yourself an item
+    usage: /item <item> [amount]
+    permission: essentials.item
+    aliases: [i]
+  time:
+    description: Set or get world time
+    usage: /time <set|add|day|night|noon|midnight> [value] [world]
+    permission: essentials.time
+  weather:
+    description: Set world weather
+    usage: /weather <clear|rain|thunder> [duration] [world]
+    permission: essentials.weather
+  kill:
+    description: Kill a player
+    usage: /kill <player>
+    permission: essentials.kill
+
+  # --- Kit ---
+  kit:
+    description: Receive a kit of items
+    usage: /kit [name] [player]
+    permission: essentials.kit
+  kits:
+    description: List available kits
+    usage: /kits
+    permission: essentials.kits
+
+  # --- Moderation ---
+  kick:
+    description: Kick a player from the server
+    usage: /kick <player> [reason]
+    permission: essentials.kick
+  ban:
+    description: Ban a player from the server
+    usage: /ban <player> [reason]
+    permission: essentials.ban
+  unban:
+    description: Unban a player
+    usage: /unban <player>
+    permission: essentials.unban
+    aliases: [pardon]
+  mute:
+    description: Mute a player
+    usage: /mute <player> [duration] [reason]
+    permission: essentials.mute
+  unmute:
+    description: Unmute a player
+    usage: /unmute <player>
+    permission: essentials.unmute
+
+  # --- Info ---
+  tps:
+    description: Show server TPS
+    usage: /tps
+    permission: essentials.tps
+  uptime:
+    description: Show server uptime
+    usage: /uptime
+    permission: essentials.uptime
+  essentials:
+    description: EssentialsFolia main command
+    usage: /essentials [reload]
+    permission: essentials.admin
+    aliases: [ess]
+
+permissions:
+  essentials.*:
+    description: Grants all EssentialsFolia permissions
+    children:
+      essentials.tp: true
+      essentials.tpa: true
+      essentials.tpahere: true
+      essentials.tpaccept: true
+      essentials.tpdeny: true
+      essentials.back: true
+      essentials.spawn: true
+      essentials.setspawn: true
+      essentials.home: true
+      essentials.home.multiple: true
+      essentials.sethome: true
+      essentials.delhome: true
+      essentials.homes: true
+      essentials.warp: true
+      essentials.setwarp: true
+      essentials.delwarp: true
+      essentials.warps: true
+      essentials.heal: true
+      essentials.heal.others: true
+      essentials.feed: true
+      essentials.feed.others: true
+      essentials.fly: true
+      essentials.fly.others: true
+      essentials.god: true
+      essentials.god.others: true
+      essentials.speed: true
+      essentials.speed.others: true
+      essentials.vanish: true
+      essentials.vanish.others: true
+      essentials.nick: true
+      essentials.nick.others: true
+      essentials.nick.color: true
+      essentials.afk: true
+      essentials.ping: true
+      essentials.ping.others: true
+      essentials.msg: true
+      essentials.reply: true
+      essentials.broadcast: true
+      essentials.gamemode: true
+      essentials.gamemode.others: true
+      essentials.give: true
+      essentials.item: true
+      essentials.time: true
+      essentials.weather: true
+      essentials.kill: true
+      essentials.kit: true
+      essentials.kits: true
+      essentials.kick: true
+      essentials.ban: true
+      essentials.unban: true
+      essentials.mute: true
+      essentials.unmute: true
+      essentials.tps: true
+      essentials.uptime: true
+      essentials.admin: true
+
+  essentials.default:
+    description: Default permissions for all players
+    children:
+      essentials.tpa: true
+      essentials.tpahere: true
+      essentials.tpaccept: true
+      essentials.tpdeny: true
+      essentials.back: true
+      essentials.spawn: true
+      essentials.home: true
+      essentials.sethome: true
+      essentials.delhome: true
+      essentials.homes: true
+      essentials.warp: true
+      essentials.warps: true
+      essentials.heal: true
+      essentials.feed: true
+      essentials.fly: true
+      essentials.afk: true
+      essentials.ping: true
+      essentials.msg: true
+      essentials.reply: true
+      essentials.kit: true
+      essentials.kits: true
