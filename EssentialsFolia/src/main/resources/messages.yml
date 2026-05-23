@@ -1,0 +1,167 @@
+# EssentialsFolia Messages
+# Use & for color codes, {0}, {1}, ... for placeholders
+
+# General
+no-permission: '&cDu hast keine Berechtigung dafür.'
+player-only: '&cDieser Befehl kann nur von Spielern ausgeführt werden.'
+player-not-found: '&cSpieler &e{0} &cwurde nicht gefunden.'
+invalid-number: '&cUngültige Zahl: &e{0}'
+invalid-usage: '&cFalsche Verwendung: &e{0}'
+must-be-player: '&cDu musst ein Spieler sein, um diesen Befehl zu verwenden.'
+
+# Teleport
+tp-teleporting: '&aTeleportiere zu &e{0}&a...'
+tp-teleported: '&aDu wurdest zu &e{0} &ateleportiert.'
+tp-teleported-coords: '&aDu wurdest zu &e{0}&a, &e{1}&a, &e{2} &ain &e{3} &ateleportiert.'
+tp-countdown: '&eTeleportiere in &6{0} &eSekunde(n)... Nicht bewegen!'
+tp-cancelled: '&cTeleport abgebrochen! Du hast dich bewegt.'
+tp-request-sent: '&aDu hast eine Teleport-Anfrage an &e{0} &agesendet.'
+tp-request-received: '&e{0} &amöchte zu dir teleportieren. Tippe &e/tpaccept &aoder &e/tpdeny&a.'
+tp-request-here-sent: '&aDu hast &e{0} &agebeten, zu dir zu teleportieren.'
+tp-request-here-received: '&e{0} &amöchte, dass du zu ihm/ihr teleportierst. Tippe &e/tpaccept &aoder &e/tpdeny&a.'
+tp-request-accepted: '&aTeleport-Anfrage angenommen.'
+tp-request-accepted-sender: '&e{0} &ahat deine Teleport-Anfrage angenommen.'
+tp-request-denied: '&cTeleport-Anfrage abgelehnt.'
+tp-request-denied-sender: '&e{0} &chat deine Teleport-Anfrage abgelehnt.'
+tp-request-expired: '&cDeine Teleport-Anfrage an &e{0} &cist abgelaufen.'
+tp-no-request: '&cDu hast keine ausstehende Teleport-Anfrage.'
+tp-already-request: '&cDu hast bereits eine ausstehende Anfrage an &e{0}&c.'
+back-no-location: '&cKeine frühere Position gespeichert.'
+back-teleported: '&aDu wurdest zu deiner letzten Position zurückteleportiert.'
+spawn-teleported: '&aDu wurdest zum Spawn teleportiert.'
+spawn-set: '&aSpawn wurde gesetzt.'
+tp-cooldown: '&cBitte warte &e{0} &cSekunden, bevor du diesen Befehl erneut verwendest.'
+
+# Homes
+home-teleported: '&aDu wurdest zu Home &e{0} &ateleportiert.'
+home-set: '&aHome &e{0} &awurde gesetzt.'
+home-deleted: '&aHome &e{0} &awurde gelöscht.'
+home-not-found: '&cHome &e{0} &cwurde nicht gefunden.'
+home-list: '&aDeine Homes: &e{0}'
+home-list-other: '&aHomes von &e{0}&a: &e{1}'
+home-limit-reached: '&cDu hast dein Home-Limit von &e{0} &cerreicht.'
+home-none: '&cDu hast noch keine Homes gesetzt.'
+
+# Warps
+warp-teleported: '&aDu wurdest zu Warp &e{0} &ateleportiert.'
+warp-set: '&aWarp &e{0} &awurde gesetzt.'
+warp-deleted: '&aWarp &e{0} &awurde gelöscht.'
+warp-not-found: '&cWarp &e{0} &cwurde nicht gefunden.'
+warp-list: '&aVerfügbare Warps: &e{0}'
+warp-none: '&cEs gibt noch keine Warps.'
+warp-no-permission: '&cDu hast keine Berechtigung für Warp &e{0}&c.'
+
+# Heal & Feed
+heal-self: '&aDu wurdest geheilt.'
+heal-other: '&aDu hast &e{0} &ageheilt.'
+heal-received: '&e{0} &ahat dich geheilt.'
+feed-self: '&aDu wurdest gesättigt.'
+feed-other: '&aDu hast &e{0} &agesättigt.'
+feed-received: '&e{0} &ahat dich gesättigt.'
+
+# Fly
+fly-enabled-self: '&aFlugmodus &aaktivert.'
+fly-disabled-self: '&cFlugmodus &cdeaktivert.'
+fly-enabled-other: '&aFlugmodus für &e{0} &aaktiviert.'
+fly-disabled-other: '&cFlugmodus für &e{0} &cdeaktiviert.'
+fly-enabled-received: '&e{0} &ahat deinen Flugmodus aktiviert.'
+fly-disabled-received: '&e{0} &chat deinen Flugmodus deaktiviert.'
+
+# God
+god-enabled-self: '&aGottmodus aktiviert.'
+god-disabled-self: '&cGottmodus deaktiviert.'
+god-enabled-other: '&aGottmodus für &e{0} &aaktiviert.'
+god-disabled-other: '&cGottmodus für &e{0} &cdeaktiviert.'
+god-enabled-received: '&e{0} &ahat deinen Gottmodus aktiviert.'
+god-disabled-received: '&e{0} &chat deinen Gottmodus deaktiviert.'
+
+# Speed
+speed-set-self: '&aGeschwindigkeit auf &e{0} &agesetzt.'
+speed-set-other: '&aGeschwindigkeit von &e{0} &aauf &e{1} &agesetzt.'
+speed-set-received: '&e{0} &ahat deine Geschwindigkeit auf &e{1} &agesetzt.'
+speed-invalid: '&cUngültige Geschwindigkeit. Bitte wähle einen Wert zwischen &e0&c und &e10&c.'
+
+# Vanish
+vanish-enabled-self: '&aDu bist jetzt unsichtbar.'
+vanish-disabled-self: '&cDu bist jetzt wieder sichtbar.'
+vanish-enabled-other: '&e{0} &aist jetzt unsichtbar.'
+vanish-disabled-other: '&e{0} &aist jetzt wieder sichtbar.'
+
+# Nick
+nick-set-self: '&aDein Nickname wurde auf &r{0}&a gesetzt.'
+nick-set-other: '&aDer Nickname von &e{0} &awurde auf &r{1}&a gesetzt.'
+nick-cleared-self: '&aDein Nickname wurde zurückgesetzt.'
+nick-cleared-other: '&aDer Nickname von &e{0} &awurde zurückgesetzt.'
+nick-too-long: '&cDer Nickname ist zu lang. Maximum: &e{0} &cZeichen.'
+nick-invalid: '&cUngültiger Nickname.'
+
+# AFK
+afk-self: '&e{0} &aist jetzt AFK.'
+afk-back: '&e{0} &aist nicht mehr AFK.'
+afk-kick: '&cDu wurdest wegen Inaktivität gekickt.'
+
+# Ping
+ping-self: '&aDein Ping: &e{0}ms'
+ping-other: '&aPing von &e{0}&a: &e{1}ms'
+
+# Chat
+msg-format: '&7[&f{0} &7-> &f{1}&7] &f{2}'
+msg-no-reply: '&cNiemand, dem du antworten könntest.'
+msg-player-afk: '&e{0} &aist gerade AFK: &7{1}'
+
+# Gamemode
+gamemode-set-self: '&aSpielermodus auf &e{0} &agesetzt.'
+gamemode-set-other: '&aSpielermodus von &e{0} &aauf &e{1} &agesetzt.'
+gamemode-set-received: '&e{0} &ahat deinen Spielermodus auf &e{1} &agesetzt.'
+
+# Give & Item
+give-given: '&aDu hast &e{0}x {1} &aan &e{2} &agegeben.'
+give-received: '&aDu hast &e{0}x {1} &aerhalten.'
+item-given: '&aDu hast &e{0}x {1} &aerhalten.'
+item-invalid: '&cUngültiger Gegenstand: &e{0}'
+
+# Time
+time-set: '&aZeit in &e{0} &aauf &e{1} &agesetzt.'
+time-get: '&aZeit in &e{0}&a: &e{1}'
+
+# Weather
+weather-set: '&aWetter in &e{0} &aauf &e{1} &agesetzt.'
+
+# Kit
+kit-received: '&aDu hast das Kit &e{0} &aerhalten.'
+kit-not-found: '&cKit &e{0} &cwurde nicht gefunden.'
+kit-no-permission: '&cDu hast keine Berechtigung für Kit &e{0}&c.'
+kit-cooldown: '&cBitte warte noch &e{0}&c, bevor du dieses Kit erneut verwendest.'
+kit-list: '&aVerfügbare Kits: &e{0}'
+kit-none: '&cEs sind keine Kits verfügbar.'
+kit-received-other: '&aDu hast &e{0} &adas Kit &e{1} &agegeben.'
+
+# Kill
+kill-killed: '&cDu hast &e{0} &cgekickt.'
+kill-self: '&cDu kannst dich nicht selbst töten.'
+
+# Kick
+kick-kicked: '&cDu hast &e{0} &cgekickt. Grund: &e{1}'
+kick-message: '&cDu wurdest gekickt.\n&7Grund: &c{0}'
+
+# Ban
+ban-banned: '&cDu hast &e{0} &cgebannt. Grund: &e{1}'
+ban-message: '&cDu wurdest gebannt.\n&7Grund: &c{0}'
+ban-already: '&e{0} &cist bereits gebannt.'
+unban-unbanned: '&aDu hast &e{0} &aentbannt.'
+unban-not-banned: '&e{0} &cist nicht gebannt.'
+
+# Mute
+mute-muted: '&aDu hast &e{0} &agemuted.'
+mute-unmuted: '&aDu hast &e{0} &ageunmutet.'
+mute-is-muted: '&cDu bist gemutet und kannst nicht schreiben.'
+mute-not-muted: '&e{0} &cist nicht gemutet.'
+
+# TPS
+tps-format: '&aTPS: &e{0} &a| &e{1} &a| &e{2} &7(1m, 5m, 15m)'
+
+# Uptime
+uptime-format: '&aServer läuft seit: &e{0}'
+
+# Essentials Admin
+reloaded: '&aEssentialsFolia wurde neu geladen.'
