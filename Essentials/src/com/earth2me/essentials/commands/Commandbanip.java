@@ -9,9 +9,9 @@ import java.util.logging.Level;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
+import org.bukkit.entity.Player;
 
 
-//TODO: Add kick to online players matching ip ban.
 public class Commandbanip extends EssentialsCommand
 {
 	public Commandbanip()
@@ -64,6 +64,16 @@ public class Commandbanip extends EssentialsCommand
 
 		ess.getServer().getBanList(BanList.Type.IP).addBan(ipAddress, banReason, null, senderName);
 		server.getLogger().log(Level.INFO, tl("playerBanIpAddress", senderName, ipAddress, banReason));
+
+		final String kickMessage = tl("banFormat", banReason, senderName);
+		for (Player onlinePlayer : ess.getOnlinePlayers())
+		{
+			if (onlinePlayer.getAddress() != null && onlinePlayer.getAddress().getAddress() != null
+					&& onlinePlayer.getAddress().getAddress().getHostAddress().equals(ipAddress))
+			{
+				onlinePlayer.kickPlayer(kickMessage);
+			}
+		}
 
 		ess.broadcastMessage("essentials.ban.notify", tl("playerBanIpAddress", senderName, ipAddress, banReason));
 	}
