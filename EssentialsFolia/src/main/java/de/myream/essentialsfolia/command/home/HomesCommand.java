@@ -3,7 +3,6 @@ package de.myream.essentialsfolia.command.home;
 import de.myream.essentialsfolia.EssentialsFolia;
 import de.myream.essentialsfolia.command.AbstractCommand;
 import de.myream.essentialsfolia.model.EssentialsUser;
-import de.myream.essentialsfolia.util.Colors;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

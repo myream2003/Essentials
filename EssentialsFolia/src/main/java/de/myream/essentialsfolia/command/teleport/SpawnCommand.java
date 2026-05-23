@@ -2,7 +2,6 @@ package de.myream.essentialsfolia.command.teleport;
 
 import de.myream.essentialsfolia.EssentialsFolia;
 import de.myream.essentialsfolia.command.AbstractCommand;
-import de.myream.essentialsfolia.model.EssentialsUser;
 import de.myream.essentialsfolia.util.Colors;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -26,9 +25,8 @@ public class SpawnCommand extends AbstractCommand {
             return;
         }
 
-        EssentialsUser user = plugin.getUserManager().get(self);
         if (plugin.getConfig().getBoolean("teleport.save-on-spawn", true)) {
-            user.setLastLocation(self.getLocation());
+            plugin.getUserManager().get(self).setLastLocation(self.getLocation());
         }
 
         plugin.getTeleportManager().teleport(self, spawn,

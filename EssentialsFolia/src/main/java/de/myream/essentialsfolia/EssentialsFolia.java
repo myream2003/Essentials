@@ -1,12 +1,15 @@
 package de.myream.essentialsfolia;
 
 import de.myream.essentialsfolia.command.CommandManager;
-import de.myream.essentialsfolia.listener.PlayerJoinQuitListener;
-import de.myream.essentialsfolia.listener.PlayerMoveListener;
 import de.myream.essentialsfolia.listener.ChatListener;
 import de.myream.essentialsfolia.listener.DamageListener;
-import de.myream.essentialsfolia.manager.*;
-import de.myream.essentialsfolia.util.FoliaLib;
+import de.myream.essentialsfolia.listener.PlayerJoinQuitListener;
+import de.myream.essentialsfolia.listener.PlayerMoveListener;
+import de.myream.essentialsfolia.manager.KitManager;
+import de.myream.essentialsfolia.manager.SpawnManager;
+import de.myream.essentialsfolia.manager.TeleportManager;
+import de.myream.essentialsfolia.manager.UserManager;
+import de.myream.essentialsfolia.manager.WarpManager;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -15,6 +18,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.util.concurrent.TimeUnit;
 
 public class EssentialsFolia extends JavaPlugin {
 
@@ -49,16 +53,17 @@ public class EssentialsFolia extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ChatListener(this), this);
         getServer().getPluginManager().registerEvents(new DamageListener(this), this);
 
-        // AFK auto-detection every 10 seconds
-        int autoAfk = getConfig().getInt("afk.auto-afk", 300);
-        if (autoAfk > 0) {
-            FoliaLib.runAsyncRepeating(this,
-                    () -> getServer().getOnlinePlayers().forEach(p -> {
-                        var user = userManager.get(p);
-                        if (user == null) return;
-                        // Movement-based AFK is tracked in PlayerMoveListener
+        // Auto-AFK detection ticker (async, every 10 seconds)
+        int autoAfkSeconds = getConfig().getInt("afk.auto-afk", 300);
+        if (autoAfkSeconds > 0) {
+            getServer().getAsyncScheduler().runAtFixedRate(this, ignored ->
+                    getServer().getOnlinePlayers().forEach(p -> {
+                        var user = userManager.get(p.getUniqueId());
+                        if (user == null || user.isAfk()) return;
+                        // Movement tracking is handled in PlayerMoveListener;
+                        // this ticker could be extended for time-based AFK kicks.
                     }),
-                    10, 10, java.util.concurrent.TimeUnit.SECONDS);
+                    10, 10, TimeUnit.SECONDS);
         }
 
         getLogger().info("EssentialsFolia v" + getDescription().getVersion() + " enabled.");
@@ -82,7 +87,6 @@ public class EssentialsFolia extends JavaPlugin {
 
         messages = YamlConfiguration.loadConfiguration(msgFile);
 
-        // Merge defaults from jar
         InputStream defaultStream = getResource("messages.yml");
         if (defaultStream != null) {
             YamlConfiguration defaults = YamlConfiguration.loadConfiguration(
@@ -91,17 +95,19 @@ public class EssentialsFolia extends JavaPlugin {
         }
     }
 
+    /** Returns a prefixed, placeholder-substituted message string. */
     public String msg(String key, Object... args) {
         String prefix = getConfig().getString("general.prefix", "&8[&aEssentials&8]&r ");
-        String raw = messages.getString(key, "&c[Missing message: " + key + "]");
+        String raw = messages.getString(key, "&c[Fehlende Nachricht: " + key + "]");
         for (int i = 0; i < args.length; i++) {
             raw = raw.replace("{" + i + "}", String.valueOf(args[i]));
         }
         return prefix + raw;
     }
 
+    /** Returns a raw (unprefixed) placeholder-substituted message string. */
     public String msgRaw(String key, Object... args) {
-        String raw = messages.getString(key, "&c[Missing: " + key + "]");
+        String raw = messages.getString(key, "&c[Fehlend: " + key + "]");
         for (int i = 0; i < args.length; i++) {
             raw = raw.replace("{" + i + "}", String.valueOf(args[i]));
         }
@@ -109,11 +115,11 @@ public class EssentialsFolia extends JavaPlugin {
     }
 
     public static EssentialsFolia getInstance() { return instance; }
-    public UserManager getUserManager() { return userManager; }
-    public WarpManager getWarpManager() { return warpManager; }
-    public SpawnManager getSpawnManager() { return spawnManager; }
-    public TeleportManager getTeleportManager() { return teleportManager; }
-    public KitManager getKitManager() { return kitManager; }
-    public YamlConfiguration getMessages() { return messages; }
-    public Instant getStartTime() { return startTime; }
+    public UserManager getUserManager()         { return userManager; }
+    public WarpManager getWarpManager()         { return warpManager; }
+    public SpawnManager getSpawnManager()        { return spawnManager; }
+    public TeleportManager getTeleportManager()  { return teleportManager; }
+    public KitManager getKitManager()            { return kitManager; }
+    public YamlConfiguration getMessages()       { return messages; }
+    public Instant getStartTime()                { return startTime; }
 }

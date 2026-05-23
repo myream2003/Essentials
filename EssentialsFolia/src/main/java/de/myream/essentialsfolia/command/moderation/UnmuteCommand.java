@@ -45,6 +45,7 @@ public class UnmuteCommand extends AbstractCommand {
         List<String> names = new ArrayList<>();
         if (args.length == 1) {
             for (Player p : Bukkit.getOnlinePlayers()) {
+                // get(UUID) may return null if player not in cache — skip safely
                 EssentialsUser u = plugin.getUserManager().get(p.getUniqueId());
                 if (u != null && u.isMuted()) names.add(p.getName());
             }

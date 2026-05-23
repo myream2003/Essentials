@@ -27,15 +27,20 @@ public class UserManager {
         this.dataFolder.mkdirs();
     }
 
+    /** Always returns a non-null user for an online player. */
     public EssentialsUser getOrCreate(Player player) {
-        return users.computeIfAbsent(player.getUniqueId(),
+        EssentialsUser user = users.computeIfAbsent(player.getUniqueId(),
                 uuid -> loadOrCreate(uuid, player.getName()));
+        user.setName(player.getName());
+        return user;
     }
 
+    /** May return null for players not currently loaded. Use getOrCreate for online players. */
     public EssentialsUser get(UUID uuid) {
         return users.get(uuid);
     }
 
+    /** Always returns a non-null user for an online player. */
     public EssentialsUser get(Player player) {
         return getOrCreate(player);
     }
@@ -53,7 +58,6 @@ public class UserManager {
         user.setMuted(cfg.getBoolean("muted", false));
         user.setMuteExpiry(cfg.getLong("muteExpiry", 0));
 
-        // Load homes
         if (cfg.isConfigurationSection("homes")) {
             for (String key : cfg.getConfigurationSection("homes").getKeys(false)) {
                 Location loc = deserializeLocation(cfg, "homes." + key);
@@ -61,11 +65,9 @@ public class UserManager {
             }
         }
 
-        // Load last location
         Location lastLoc = deserializeLocation(cfg, "lastLocation");
         if (lastLoc != null) user.setLastLocation(lastLoc);
 
-        // Load kit cooldowns
         if (cfg.isConfigurationSection("kitCooldowns")) {
             for (String kit : cfg.getConfigurationSection("kitCooldowns").getKeys(false)) {
                 user.setKitCooldown(kit, cfg.getLong("kitCooldowns." + kit));
@@ -90,19 +92,17 @@ public class UserManager {
         cfg.set("muted", user.isMuted());
         cfg.set("muteExpiry", user.getMuteExpiry());
 
-        // Save homes
-        for (Map.Entry<String, Location> entry : user.getHomes().entrySet()) {
-            serializeLocation(cfg, "homes." + entry.getKey(), entry.getValue());
+        synchronized (user) {
+            for (Map.Entry<String, Location> entry : user.getHomes().entrySet()) {
+                serializeLocation(cfg, "homes." + entry.getKey(), entry.getValue());
+            }
+            for (Map.Entry<String, Long> entry : user.getKitCooldowns().entrySet()) {
+                cfg.set("kitCooldowns." + entry.getKey(), entry.getValue());
+            }
         }
 
-        // Save last location
         if (user.getLastLocation() != null) {
             serializeLocation(cfg, "lastLocation", user.getLastLocation());
-        }
-
-        // Save kit cooldowns
-        for (Map.Entry<String, Long> entry : user.getKitCooldowns().entrySet()) {
-            cfg.set("kitCooldowns." + entry.getKey(), entry.getValue());
         }
 
         try {
@@ -112,10 +112,14 @@ public class UserManager {
         }
     }
 
+    /** Saves all loaded users asynchronously. */
     public void saveAll() {
-        users.values().forEach(this::saveSync);
+        for (EssentialsUser user : users.values()) {
+            FoliaLib.runAsync(plugin, () -> saveSync(user));
+        }
     }
 
+    /** Saves user data and removes them from the in-memory cache. */
     public void unload(UUID uuid) {
         EssentialsUser user = users.remove(uuid);
         if (user != null) saveSync(user);
@@ -136,11 +140,13 @@ public class UserManager {
         if (worldName == null) return null;
         World world = Bukkit.getWorld(worldName);
         if (world == null) return null;
-        double x = cfg.getDouble(path + ".x");
-        double y = cfg.getDouble(path + ".y");
-        double z = cfg.getDouble(path + ".z");
-        float yaw = (float) cfg.getDouble(path + ".yaw");
-        float pitch = (float) cfg.getDouble(path + ".pitch");
-        return new Location(world, x, y, z, yaw, pitch);
+        return new Location(
+                world,
+                cfg.getDouble(path + ".x"),
+                cfg.getDouble(path + ".y"),
+                cfg.getDouble(path + ".z"),
+                (float) cfg.getDouble(path + ".yaw"),
+                (float) cfg.getDouble(path + ".pitch")
+        );
     }
 }

@@ -8,12 +8,12 @@ import de.myream.essentialsfolia.util.Colors;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.StringJoiner;
-import java.util.concurrent.TimeUnit;
 
 public class KitCommand extends AbstractCommand {
 
@@ -23,8 +23,8 @@ public class KitCommand extends AbstractCommand {
 
     @Override
     protected void execute(CommandSender sender, String label, String[] args) {
-        // /kits - list all kits
-        if (label.equalsIgnoreCase("kits") || (args.length == 0)) {
+        // /kits — list all kits
+        if (label.equalsIgnoreCase("kits") || args.length == 0) {
             if (!requirePermission(sender, "essentials.kits")) return;
             listKits(sender);
             return;
@@ -34,6 +34,7 @@ public class KitCommand extends AbstractCommand {
 
         String kitName = args[0];
         Player target;
+        boolean forOther = false;
 
         if (args.length > 1) {
             if (!sender.hasPermission("essentials.kit.others")) {
@@ -42,6 +43,7 @@ public class KitCommand extends AbstractCommand {
             }
             target = Bukkit.getPlayerExact(args[1]);
             if (target == null) { send(sender, "player-not-found", args[1]); return; }
+            forOther = true;
         } else {
             if (!requirePlayer(sender)) return;
             target = asPlayer(sender);
@@ -68,8 +70,7 @@ public class KitCommand extends AbstractCommand {
             return;
         }
 
-        // Give items
-        for (var item : kit.getItems()) {
+        for (ItemStack item : kit.getItems()) {
             target.getInventory().addItem(item.clone());
         }
 
@@ -78,7 +79,7 @@ public class KitCommand extends AbstractCommand {
             plugin.getUserManager().save(user);
         }
 
-        if (target.equals(sender instanceof Player p ? p : null)) {
+        if (!forOther) {
             send(sender, "kit-received", kitName);
         } else {
             target.sendMessage(Colors.parse(plugin.msg("kit-received", kitName)));

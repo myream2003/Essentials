@@ -27,6 +27,7 @@ public class BackCommand extends AbstractCommand {
             return;
         }
 
+        // Swap current and last so /back can be pressed again to return
         Location current = self.getLocation();
         user.setLastLocation(current);
 

@@ -22,20 +22,16 @@ public class PlayerJoinQuitListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         EssentialsUser user = plugin.getUserManager().getOrCreate(player);
-        user.setName(player.getName());
 
-        // Restore fly mode
         if (user.isFlyMode() && player.hasPermission("essentials.fly")) {
             player.setAllowFlight(true);
             player.setFlying(true);
         }
 
-        // Apply nickname
         if (user.getNickname() != null) {
             player.setDisplayName(Colors.colorize(user.getNickname()));
         }
 
-        // Restore vanish
         if (user.isVanished() && player.hasPermission("essentials.vanish")) {
             for (Player other : plugin.getServer().getOnlinePlayers()) {
                 if (!other.hasPermission("essentials.vanish.see")) {
@@ -44,10 +40,12 @@ public class PlayerJoinQuitListener implements Listener {
             }
         }
 
-        // Hide vanished players from this player
+        // Hide already-vanished players from the joining player
         for (Player other : plugin.getServer().getOnlinePlayers()) {
+            if (other.equals(player)) continue;
             EssentialsUser otherUser = plugin.getUserManager().get(other.getUniqueId());
-            if (otherUser != null && otherUser.isVanished() && !player.hasPermission("essentials.vanish.see")) {
+            if (otherUser != null && otherUser.isVanished()
+                    && !player.hasPermission("essentials.vanish.see")) {
                 player.hidePlayer(plugin, other);
             }
         }
@@ -56,11 +54,7 @@ public class PlayerJoinQuitListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-
-        // Cancel pending teleports
         plugin.getTeleportManager().cancelPending(player.getUniqueId());
-
-        // Save and unload user data
         plugin.getUserManager().unload(player.getUniqueId());
     }
 }

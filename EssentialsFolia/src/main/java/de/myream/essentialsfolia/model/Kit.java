@@ -10,7 +10,7 @@ import java.util.List;
 public class Kit {
 
     private final String name;
-    private final long cooldown; // in seconds
+    private final long cooldown;
     private final String permission;
     private final List<ItemStack> items;
 
@@ -24,16 +24,17 @@ public class Kit {
     private List<ItemStack> parseItems(List<String> itemStrings) {
         List<ItemStack> result = new ArrayList<>();
         for (String entry : itemStrings) {
+            if (entry == null || entry.isBlank()) continue;
             String[] parts = entry.split(":");
-            if (parts.length == 0) continue;
 
             Material material = Material.matchMaterial(parts[0].toUpperCase());
-            if (material == null || material == Material.AIR) continue;
+            if (material == null || !material.isItem()) continue;
 
             int amount = parts.length > 1 ? safeInt(parts[1], 1) : 1;
-            ItemStack item = new ItemStack(material, Math.max(1, amount));
+            amount = Math.max(1, Math.min(amount, material.getMaxStackSize()));
+            ItemStack item = new ItemStack(material, amount);
 
-            if (parts.length > 2) {
+            if (parts.length > 2 && !parts[2].isBlank()) {
                 ItemMeta meta = item.getItemMeta();
                 if (meta != null) {
                     meta.setDisplayName(parts[2].replace("_", " ").replace('&', '§'));
@@ -54,8 +55,8 @@ public class Kit {
         }
     }
 
-    public String getName() { return name; }
-    public long getCooldown() { return cooldown; }
-    public String getPermission() { return permission; }
+    public String getName()        { return name; }
+    public long getCooldown()      { return cooldown; }
+    public String getPermission()  { return permission; }
     public List<ItemStack> getItems() { return new ArrayList<>(items); }
 }

@@ -2,7 +2,6 @@ package de.myream.essentialsfolia.command.warp;
 
 import de.myream.essentialsfolia.EssentialsFolia;
 import de.myream.essentialsfolia.command.AbstractCommand;
-import de.myream.essentialsfolia.model.EssentialsUser;
 import de.myream.essentialsfolia.util.Colors;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -41,9 +40,7 @@ public class WarpCommand extends AbstractCommand {
             return;
         }
 
-        EssentialsUser user = plugin.getUserManager().get(self);
-        user.setLastLocation(self.getLocation());
-
+        plugin.getUserManager().get(self).setLastLocation(self.getLocation());
         plugin.getTeleportManager().teleport(self, warp,
                 () -> self.sendMessage(Colors.parse(plugin.msg("warp-teleported", name))));
     }

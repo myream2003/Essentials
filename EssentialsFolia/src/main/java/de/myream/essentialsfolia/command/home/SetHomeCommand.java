@@ -20,8 +20,7 @@ public class SetHomeCommand extends AbstractCommand {
         EssentialsUser user = plugin.getUserManager().get(self);
         String homeName = args.length > 0 ? args[0] : "home";
 
-        // Check home limit
-        int maxHomes = getMaxHomes(self);
+        int maxHomes = resolveMaxHomes(self);
         if (!user.hasHome(homeName) && user.getHomes().size() >= maxHomes) {
             send(sender, "home-limit-reached", maxHomes);
             return;
@@ -32,13 +31,12 @@ public class SetHomeCommand extends AbstractCommand {
         send(sender, "home-set", homeName);
     }
 
-    private int getMaxHomes(Player player) {
+    private int resolveMaxHomes(Player player) {
         if (player.hasPermission("essentials.homes.unlimited")) return Integer.MAX_VALUE;
         String prefix = plugin.getConfig().getString("homes.limit-permission-prefix", "essentials.homes.");
-        int max = plugin.getConfig().getInt("homes.max-homes", 1);
         for (int i = 100; i >= 1; i--) {
             if (player.hasPermission(prefix + i)) return i;
         }
-        return max;
+        return plugin.getConfig().getInt("homes.max-homes", 1);
     }
 }

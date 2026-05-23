@@ -13,7 +13,7 @@ import java.util.List;
 
 public class GamemodeCommand extends AbstractCommand {
 
-    private final String forced; // pre-set gamemode for gms/gmc/gma/gmsp shortcuts
+    private final String forced;
 
     public GamemodeCommand(EssentialsFolia plugin) {
         super(plugin);
@@ -31,19 +31,19 @@ public class GamemodeCommand extends AbstractCommand {
 
         String modeStr;
         Player target;
+        boolean forOther;
 
         if (forced != null) {
             modeStr = forced;
             if (args.length > 0) {
-                if (!sender.hasPermission("essentials.gamemode.others")) {
-                    sendRaw(sender, "no-permission");
-                    return;
-                }
+                if (!sender.hasPermission("essentials.gamemode.others")) { sendRaw(sender, "no-permission"); return; }
                 target = Bukkit.getPlayerExact(args[0]);
                 if (target == null) { send(sender, "player-not-found", args[0]); return; }
+                forOther = true;
             } else {
                 if (!requirePlayer(sender)) return;
                 target = asPlayer(sender);
+                forOther = false;
             }
         } else {
             if (args.length == 0) {
@@ -52,15 +52,14 @@ public class GamemodeCommand extends AbstractCommand {
             }
             modeStr = args[0];
             if (args.length > 1) {
-                if (!sender.hasPermission("essentials.gamemode.others")) {
-                    sendRaw(sender, "no-permission");
-                    return;
-                }
+                if (!sender.hasPermission("essentials.gamemode.others")) { sendRaw(sender, "no-permission"); return; }
                 target = Bukkit.getPlayerExact(args[1]);
                 if (target == null) { send(sender, "player-not-found", args[1]); return; }
+                forOther = true;
             } else {
                 if (!requirePlayer(sender)) return;
                 target = asPlayer(sender);
+                forOther = false;
             }
         }
 
@@ -73,11 +72,11 @@ public class GamemodeCommand extends AbstractCommand {
         target.setGameMode(gm);
         String gmName = gm.name().toLowerCase();
 
-        if (target.equals(sender)) {
-            send(sender, "gamemode-set-self", gmName);
-        } else {
+        if (forOther) {
             send(sender, "gamemode-set-other", target.getName(), gmName);
             target.sendMessage(Colors.parse(plugin.msg("gamemode-set-received", sender.getName(), gmName)));
+        } else {
+            send(sender, "gamemode-set-self", gmName);
         }
     }
 

@@ -24,28 +24,21 @@ public class TimeCommand extends AbstractCommand {
             return;
         }
 
-        World world;
-        if (args.length >= 3) {
-            world = Bukkit.getWorld(args[2]);
-            if (world == null) { send(sender, "player-not-found", args[2]); return; }
-        } else if (sender instanceof Player p) {
-            world = p.getWorld();
-        } else {
-            world = Bukkit.getWorlds().get(0);
-        }
+        World world = resolveWorld(sender, args.length >= 3 ? args[2] : null);
+        if (world == null) return;
 
-        String timeStr = null;
+        String timeLabel;
         switch (args[0].toLowerCase()) {
-            case "day" -> { world.setTime(1000); timeStr = "day (1000)"; }
-            case "night" -> { world.setTime(13000); timeStr = "night (13000)"; }
-            case "noon" -> { world.setTime(6000); timeStr = "noon (6000)"; }
-            case "midnight" -> { world.setTime(18000); timeStr = "midnight (18000)"; }
+            case "day" -> { world.setTime(1000); timeLabel = "day (1000)"; }
+            case "night" -> { world.setTime(13000); timeLabel = "night (13000)"; }
+            case "noon" -> { world.setTime(6000); timeLabel = "noon (6000)"; }
+            case "midnight" -> { world.setTime(18000); timeLabel = "midnight (18000)"; }
             case "set" -> {
                 if (args.length < 2) { sendRaw(sender, "invalid-usage", "/time set <ticks>"); return; }
                 try {
                     long ticks = Long.parseLong(args[1]);
                     world.setTime(ticks);
-                    timeStr = String.valueOf(ticks);
+                    timeLabel = String.valueOf(ticks);
                 } catch (NumberFormatException e) {
                     sendRaw(sender, "invalid-number", args[1]);
                     return;
@@ -56,7 +49,7 @@ public class TimeCommand extends AbstractCommand {
                 try {
                     long ticks = Long.parseLong(args[1]);
                     world.setTime(world.getTime() + ticks);
-                    timeStr = "+" + ticks;
+                    timeLabel = "+" + ticks;
                 } catch (NumberFormatException e) {
                     sendRaw(sender, "invalid-number", args[1]);
                     return;
@@ -68,7 +61,22 @@ public class TimeCommand extends AbstractCommand {
             }
         }
 
-        send(sender, "time-set", world.getName(), timeStr);
+        send(sender, "time-set", world.getName(), timeLabel);
+    }
+
+    private World resolveWorld(CommandSender sender, String worldName) {
+        if (worldName != null) {
+            World w = Bukkit.getWorld(worldName);
+            if (w == null) send(sender, "player-not-found", worldName);
+            return w;
+        }
+        if (sender instanceof Player p) return p.getWorld();
+        List<World> worlds = Bukkit.getWorlds();
+        if (worlds.isEmpty()) {
+            sender.sendMessage("No worlds loaded.");
+            return null;
+        }
+        return worlds.get(0);
     }
 
     @Override

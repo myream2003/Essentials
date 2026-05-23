@@ -2,7 +2,6 @@ package de.myream.essentialsfolia.command;
 
 import de.myream.essentialsfolia.EssentialsFolia;
 import de.myream.essentialsfolia.util.Colors;
-import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,13 +20,13 @@ public abstract class AbstractCommand implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public final boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         execute(sender, label, args);
         return true;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+    public final List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         List<String> completions = tabComplete(sender, label, args);
         return completions != null ? completions : Collections.emptyList();
     }
@@ -64,9 +63,5 @@ public abstract class AbstractCommand implements CommandExecutor, TabCompleter {
 
     protected Player asPlayer(CommandSender sender) {
         return (Player) sender;
-    }
-
-    protected boolean isPlayer(CommandSender sender) {
-        return sender instanceof Player;
     }
 }

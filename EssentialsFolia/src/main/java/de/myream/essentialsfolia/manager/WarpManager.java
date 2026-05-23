@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,25 +38,26 @@ public class WarpManager {
             World world = Bukkit.getWorld(worldName);
             if (world == null) continue;
 
-            Location loc = new Location(
+            warps.put(name.toLowerCase(), new Location(
                     world,
                     cfg.getDouble(path + ".x"),
                     cfg.getDouble(path + ".y"),
                     cfg.getDouble(path + ".z"),
                     (float) cfg.getDouble(path + ".yaw"),
                     (float) cfg.getDouble(path + ".pitch")
-            );
-            warps.put(name.toLowerCase(), loc);
+            ));
         }
     }
 
     public void save() {
-        FoliaLib.runAsync(plugin, this::saveSync);
+        // Snapshot the map to avoid race conditions during async serialization
+        Map<String, Location> snapshot = new HashMap<>(warps);
+        FoliaLib.runAsync(plugin, () -> saveSync(snapshot));
     }
 
-    private void saveSync() {
+    private void saveSync(Map<String, Location> snapshot) {
         YamlConfiguration cfg = new YamlConfiguration();
-        for (Map.Entry<String, Location> entry : warps.entrySet()) {
+        for (Map.Entry<String, Location> entry : snapshot.entrySet()) {
             String path = "warps." + entry.getKey();
             Location loc = entry.getValue();
             cfg.set(path + ".world", loc.getWorld() != null ? loc.getWorld().getName() : "world");
@@ -77,7 +79,7 @@ public class WarpManager {
     }
 
     public void setWarp(String name, Location location) {
-        warps.put(name.toLowerCase(), location);
+        warps.put(name.toLowerCase(), location.clone());
         save();
     }
 

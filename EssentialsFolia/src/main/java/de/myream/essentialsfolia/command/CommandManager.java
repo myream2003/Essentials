@@ -14,15 +14,35 @@ import de.myream.essentialsfolia.command.moderation.KickCommand;
 import de.myream.essentialsfolia.command.moderation.MuteCommand;
 import de.myream.essentialsfolia.command.moderation.UnbanCommand;
 import de.myream.essentialsfolia.command.moderation.UnmuteCommand;
-import de.myream.essentialsfolia.command.player.*;
-import de.myream.essentialsfolia.command.teleport.*;
+import de.myream.essentialsfolia.command.player.AfkCommand;
+import de.myream.essentialsfolia.command.player.FeedCommand;
+import de.myream.essentialsfolia.command.player.FlyCommand;
+import de.myream.essentialsfolia.command.player.GodCommand;
+import de.myream.essentialsfolia.command.player.HealCommand;
+import de.myream.essentialsfolia.command.player.NickCommand;
+import de.myream.essentialsfolia.command.player.PingCommand;
+import de.myream.essentialsfolia.command.player.SpeedCommand;
+import de.myream.essentialsfolia.command.player.VanishCommand;
+import de.myream.essentialsfolia.command.teleport.BackCommand;
+import de.myream.essentialsfolia.command.teleport.SetSpawnCommand;
+import de.myream.essentialsfolia.command.teleport.SpawnCommand;
+import de.myream.essentialsfolia.command.teleport.TpCommand;
+import de.myream.essentialsfolia.command.teleport.TpaCommand;
+import de.myream.essentialsfolia.command.teleport.TpacceptCommand;
+import de.myream.essentialsfolia.command.teleport.TpahereCommand;
+import de.myream.essentialsfolia.command.teleport.TpdenyCommand;
 import de.myream.essentialsfolia.command.warp.DelWarpCommand;
 import de.myream.essentialsfolia.command.warp.SetWarpCommand;
 import de.myream.essentialsfolia.command.warp.WarpCommand;
 import de.myream.essentialsfolia.command.warp.WarpsCommand;
-import de.myream.essentialsfolia.command.world.*;
+import de.myream.essentialsfolia.command.world.GamemodeCommand;
+import de.myream.essentialsfolia.command.world.GiveCommand;
+import de.myream.essentialsfolia.command.world.ItemCommand;
+import de.myream.essentialsfolia.command.world.KillCommand;
+import de.myream.essentialsfolia.command.world.TimeCommand;
 import de.myream.essentialsfolia.command.world.TpsCommand;
 import de.myream.essentialsfolia.command.world.UptimeCommand;
+import de.myream.essentialsfolia.command.world.WeatherCommand;
 import org.bukkit.command.PluginCommand;
 
 public class CommandManager {
@@ -72,8 +92,9 @@ public class CommandManager {
         reg("reply", new ReplyCommand(plugin));
         reg("broadcast", new BroadcastCommand(plugin));
 
-        // World
-        reg("gamemode", new GamemodeCommand(plugin));
+        // World / Gamemode shortcuts
+        GamemodeCommand gmCmd = new GamemodeCommand(plugin);
+        reg("gamemode", gmCmd);
         reg("gms", new GamemodeCommand(plugin, "survival"));
         reg("gmc", new GamemodeCommand(plugin, "creative"));
         reg("gma", new GamemodeCommand(plugin, "adventure"));
@@ -85,8 +106,9 @@ public class CommandManager {
         reg("kill", new KillCommand(plugin));
 
         // Kit
-        reg("kit", new KitCommand(plugin));
-        reg("kits", new KitCommand(plugin));
+        KitCommand kitCmd = new KitCommand(plugin);
+        reg("kit", kitCmd);
+        reg("kits", kitCmd);
 
         // Moderation
         reg("kick", new KickCommand(plugin));
@@ -95,7 +117,7 @@ public class CommandManager {
         reg("mute", new MuteCommand(plugin));
         reg("unmute", new UnmuteCommand(plugin));
 
-        // Admin
+        // Admin / Info
         reg("essentials", new EssentialsAdminCommand(plugin));
         reg("tps", new TpsCommand(plugin));
         reg("uptime", new UptimeCommand(plugin));

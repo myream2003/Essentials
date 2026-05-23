@@ -3,6 +3,7 @@ package de.myream.essentialsfolia.listener;
 import de.myream.essentialsfolia.EssentialsFolia;
 import de.myream.essentialsfolia.model.EssentialsUser;
 import de.myream.essentialsfolia.util.Colors;
+import de.myream.essentialsfolia.util.FoliaLib;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -24,7 +25,7 @@ public class PlayerMoveListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onMove(PlayerMoveEvent event) {
-        // Only care about actual block movement, not head rotation
+        // Ignore head rotation — only care about actual block changes
         if (event.getFrom().getBlockX() == event.getTo().getBlockX()
                 && event.getFrom().getBlockY() == event.getTo().getBlockY()
                 && event.getFrom().getBlockZ() == event.getTo().getBlockZ()) {
@@ -32,18 +33,18 @@ public class PlayerMoveListener implements Listener {
         }
 
         Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
-        lastMove.put(uuid, System.currentTimeMillis());
+        lastMove.put(player.getUniqueId(), System.currentTimeMillis());
 
-        EssentialsUser user = plugin.getUserManager().get(uuid);
+        EssentialsUser user = plugin.getUserManager().get(player.getUniqueId());
         if (user == null) return;
 
-        // Unset AFK on movement
         if (user.isAfk()) {
             user.setAfk(false);
             user.setAfkMessage("");
-            String msg = plugin.msgRaw("afk-back", player.getDisplayName());
-            plugin.getServer().broadcast(Colors.parse(msg));
+            String displayName = player.getDisplayName();
+            FoliaLib.runGlobal(plugin,
+                    () -> plugin.getServer().broadcast(
+                            Colors.parse(plugin.msgRaw("afk-back", displayName))));
         }
     }
 

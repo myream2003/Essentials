@@ -22,43 +22,43 @@ public class FlyCommand extends AbstractCommand {
         if (!requirePermission(sender, "essentials.fly")) return;
 
         Player target;
-        boolean forOther = false;
+        boolean forOther;
 
         if (args.length > 0 && !args[0].equalsIgnoreCase("on") && !args[0].equalsIgnoreCase("off")) {
-            if (!sender.hasPermission("essentials.fly.others")) {
-                sendRaw(sender, "no-permission");
-                return;
-            }
+            if (!sender.hasPermission("essentials.fly.others")) { sendRaw(sender, "no-permission"); return; }
             target = Bukkit.getPlayerExact(args[0]);
             if (target == null) { send(sender, "player-not-found", args[0]); return; }
             forOther = true;
         } else {
             if (!requirePlayer(sender)) return;
             target = asPlayer(sender);
+            forOther = false;
         }
-
-        boolean currentFly = target.getAllowFlight();
-        boolean newFly;
-
-        if (args.length > 0 && (args[args.length - 1].equalsIgnoreCase("on") || args[args.length - 1].equalsIgnoreCase("off"))) {
-            newFly = args[args.length - 1].equalsIgnoreCase("on");
-        } else {
-            newFly = !currentFly;
-        }
-
-        target.setAllowFlight(newFly);
-        target.setFlying(newFly);
 
         EssentialsUser user = plugin.getUserManager().get(target);
+        boolean newFly = determineToggle(args, forOther ? 1 : 0, !target.getAllowFlight());
+
+        target.setAllowFlight(newFly);
+        if (!newFly) target.setFlying(false);
+
         user.setFlyMode(newFly);
         plugin.getUserManager().save(user);
 
-        if (!forOther) {
-            send(sender, newFly ? "fly-enabled-self" : "fly-disabled-self");
-        } else {
+        if (forOther) {
             send(sender, newFly ? "fly-enabled-other" : "fly-disabled-other", target.getName());
-            target.sendMessage(Colors.parse(plugin.msg(newFly ? "fly-enabled-received" : "fly-disabled-received", sender.getName())));
+            target.sendMessage(Colors.parse(plugin.msg(
+                    newFly ? "fly-enabled-received" : "fly-disabled-received", sender.getName())));
+        } else {
+            send(sender, newFly ? "fly-enabled-self" : "fly-disabled-self");
         }
+    }
+
+    private boolean determineToggle(String[] args, int idx, boolean defaultToggle) {
+        if (args.length > idx) {
+            if (args[idx].equalsIgnoreCase("on")) return true;
+            if (args[idx].equalsIgnoreCase("off")) return false;
+        }
+        return defaultToggle;
     }
 
     @Override

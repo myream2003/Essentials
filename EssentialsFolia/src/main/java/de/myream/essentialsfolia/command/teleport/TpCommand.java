@@ -2,7 +2,6 @@ package de.myream.essentialsfolia.command.teleport;
 
 import de.myream.essentialsfolia.EssentialsFolia;
 import de.myream.essentialsfolia.command.AbstractCommand;
-import de.myream.essentialsfolia.model.EssentialsUser;
 import de.myream.essentialsfolia.util.Colors;
 import de.myream.essentialsfolia.util.FoliaLib;
 import org.bukkit.Bukkit;
@@ -24,30 +23,25 @@ public class TpCommand extends AbstractCommand {
     protected void execute(CommandSender sender, String label, String[] args) {
         if (!requirePermission(sender, "essentials.tp")) return;
 
-        // /tp <player>  OR  /tp <x> <y> <z> [world]  OR  /tp <player> <target>
         if (args.length == 0) {
             sendRaw(sender, "invalid-usage", "/tp <player> | /tp <x> <y> <z> [world] | /tp <player1> <player2>");
             return;
         }
 
         if (args.length == 1) {
-            // /tp <player> - teleport self to player (requires sender to be player)
+            // /tp <player> — teleport self to player
             if (!requirePlayer(sender)) return;
             Player self = asPlayer(sender);
             Player target = Bukkit.getPlayerExact(args[0]);
-            if (target == null) {
-                send(sender, "player-not-found", args[0]);
-                return;
-            }
-            EssentialsUser user = plugin.getUserManager().get(self);
-            user.setLastLocation(self.getLocation());
+            if (target == null) { send(sender, "player-not-found", args[0]); return; }
+            plugin.getUserManager().get(self).setLastLocation(self.getLocation());
             plugin.getTeleportManager().teleport(self, target.getLocation(),
                     () -> self.sendMessage(Colors.parse(plugin.msg("tp-teleported", target.getName()))));
             return;
         }
 
         if (args.length == 2) {
-            // /tp <player1> <player2> - teleport player1 to player2
+            // /tp <player1> <player2> — teleport player1 to player2
             Player from = Bukkit.getPlayerExact(args[0]);
             Player to = Bukkit.getPlayerExact(args[1]);
             if (from == null) { send(sender, "player-not-found", args[0]); return; }
@@ -67,12 +61,11 @@ public class TpCommand extends AbstractCommand {
             double z = Double.parseDouble(args[2]);
             World world = args.length > 3 ? Bukkit.getWorld(args[3]) : self.getWorld();
             if (world == null) {
-                sender.sendMessage(Colors.parse(plugin.msg("player-not-found", args[3])));
+                send(sender, "player-not-found", args[3]);
                 return;
             }
             Location dest = new Location(world, x, y, z, self.getYaw(), self.getPitch());
-            EssentialsUser user = plugin.getUserManager().get(self);
-            user.setLastLocation(self.getLocation());
+            plugin.getUserManager().get(self).setLastLocation(self.getLocation());
             plugin.getTeleportManager().teleport(self, dest,
                     () -> self.sendMessage(Colors.parse(plugin.msg("tp-teleported-coords",
                             String.format("%.1f", x), String.format("%.1f", y), String.format("%.1f", z),

@@ -2,8 +2,8 @@ package de.myream.essentialsfolia.command.moderation;
 
 import de.myream.essentialsfolia.EssentialsFolia;
 import de.myream.essentialsfolia.command.AbstractCommand;
-import org.bukkit.Bukkit;
 import org.bukkit.BanList;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;

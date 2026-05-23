@@ -22,48 +22,49 @@ public class VanishCommand extends AbstractCommand {
         if (!requirePermission(sender, "essentials.vanish")) return;
 
         Player target;
-        boolean forOther = false;
+        boolean forOther;
 
         if (args.length > 0 && !args[0].equalsIgnoreCase("on") && !args[0].equalsIgnoreCase("off")) {
-            if (!sender.hasPermission("essentials.vanish.others")) {
-                sendRaw(sender, "no-permission");
-                return;
-            }
+            if (!sender.hasPermission("essentials.vanish.others")) { sendRaw(sender, "no-permission"); return; }
             target = Bukkit.getPlayerExact(args[0]);
             if (target == null) { send(sender, "player-not-found", args[0]); return; }
             forOther = true;
         } else {
             if (!requirePlayer(sender)) return;
             target = asPlayer(sender);
+            forOther = false;
         }
 
         EssentialsUser user = plugin.getUserManager().get(target);
-        boolean current = user.isVanished();
-        boolean newVanish;
-
-        if (args.length > 0 && (args[args.length - 1].equalsIgnoreCase("on") || args[args.length - 1].equalsIgnoreCase("off"))) {
-            newVanish = args[args.length - 1].equalsIgnoreCase("on");
-        } else {
-            newVanish = !current;
-        }
+        boolean newVanish = determineToggle(args, forOther ? 1 : 0, !user.isVanished());
 
         user.setVanished(newVanish);
+        applyVanish(target, newVanish);
 
-        final Player finalTarget = target;
+        if (forOther) {
+            send(sender, newVanish ? "vanish-enabled-other" : "vanish-disabled-other", target.getName());
+        } else {
+            send(sender, newVanish ? "vanish-enabled-self" : "vanish-disabled-self");
+        }
+    }
+
+    private void applyVanish(Player target, boolean vanish) {
         for (Player online : Bukkit.getOnlinePlayers()) {
-            if (online.equals(finalTarget)) continue;
-            if (newVanish && !online.hasPermission("essentials.vanish.see")) {
-                online.hidePlayer(plugin, finalTarget);
+            if (online.equals(target)) continue;
+            if (vanish && !online.hasPermission("essentials.vanish.see")) {
+                online.hidePlayer(plugin, target);
             } else {
-                online.showPlayer(plugin, finalTarget);
+                online.showPlayer(plugin, target);
             }
         }
+    }
 
-        if (!forOther) {
-            send(sender, newVanish ? "vanish-enabled-self" : "vanish-disabled-self");
-        } else {
-            send(sender, newVanish ? "vanish-enabled-other" : "vanish-disabled-other", target.getName());
+    private boolean determineToggle(String[] args, int idx, boolean defaultToggle) {
+        if (args.length > idx) {
+            if (args[idx].equalsIgnoreCase("on")) return true;
+            if (args[idx].equalsIgnoreCase("off")) return false;
         }
+        return defaultToggle;
     }
 
     @Override

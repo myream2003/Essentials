@@ -28,36 +28,37 @@ public class NickCommand extends AbstractCommand {
 
         Player target;
         String nickArg;
+        boolean forOther;
 
+        // /nick <player> <nick>
         if (args.length >= 2 && sender.hasPermission("essentials.nick.others")) {
             target = Bukkit.getPlayerExact(args[0]);
             if (target == null) { send(sender, "player-not-found", args[0]); return; }
             nickArg = args[1];
+            forOther = !(sender instanceof Player sp) || !sp.equals(target);
         } else {
             if (!requirePlayer(sender)) return;
             target = asPlayer(sender);
             nickArg = args[0];
+            forOther = false;
         }
 
-        boolean forOther = !target.equals(sender instanceof Player ? (Player) sender : null);
+        EssentialsUser user = plugin.getUserManager().get(target);
 
         if (nickArg.equalsIgnoreCase("off") || nickArg.equalsIgnoreCase("reset")) {
-            EssentialsUser user = plugin.getUserManager().get(target);
             user.setNickname(null);
             target.setDisplayName(target.getName());
             plugin.getUserManager().save(user);
-            if (!forOther) send(sender, "nick-cleared-self");
-            else send(sender, "nick-cleared-other", target.getName());
+            if (forOther) send(sender, "nick-cleared-other", target.getName());
+            else send(sender, "nick-cleared-self");
             return;
         }
 
-        // Strip colors if no permission
         String nick = nickArg;
         if (!sender.hasPermission("essentials.nick.color")) {
             nick = Colors.stripColor(nick);
         }
 
-        // Check length
         int maxLen = plugin.getConfig().getInt("nick.max-length", 16);
         if (maxLen > 0 && Colors.stripColor(nick).length() > maxLen) {
             send(sender, "nick-too-long", maxLen);
@@ -67,15 +68,14 @@ public class NickCommand extends AbstractCommand {
         String prefix = plugin.getConfig().getString("nick.prefix", "~");
         String displayNick = prefix + nick;
 
-        EssentialsUser user = plugin.getUserManager().get(target);
         user.setNickname(displayNick);
         target.setDisplayName(Colors.colorize(displayNick));
         plugin.getUserManager().save(user);
 
-        if (!forOther) {
-            send(sender, "nick-set-self", Colors.colorize(displayNick));
-        } else {
+        if (forOther) {
             send(sender, "nick-set-other", target.getName(), Colors.colorize(displayNick));
+        } else {
+            send(sender, "nick-set-self", Colors.colorize(displayNick));
         }
     }
 

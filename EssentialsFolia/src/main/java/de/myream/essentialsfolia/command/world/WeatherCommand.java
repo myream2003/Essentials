@@ -24,46 +24,54 @@ public class WeatherCommand extends AbstractCommand {
             return;
         }
 
-        World world;
-        if (args.length >= 3) {
-            world = Bukkit.getWorld(args[2]);
-            if (world == null) { send(sender, "player-not-found", args[2]); return; }
-        } else if (sender instanceof Player p) {
-            world = p.getWorld();
-        } else {
-            world = Bukkit.getWorlds().get(0);
-        }
+        World world = resolveWorld(sender, args.length >= 3 ? args[2] : null);
+        if (world == null) return;
 
-        int duration = 600; // 30 seconds in ticks
+        // Duration in ticks (default 30 seconds = 600 ticks)
+        int durationTicks = 600;
         if (args.length >= 2) {
             try {
-                duration = Integer.parseInt(args[1]) * 20; // seconds to ticks
+                durationTicks = Integer.parseInt(args[1]) * 20;
             } catch (NumberFormatException ignored) {}
         }
 
-        String weatherType = args[0].toLowerCase();
-        switch (weatherType) {
+        switch (args[0].toLowerCase()) {
             case "clear", "sun", "sunny" -> {
                 world.setStorm(false);
                 world.setThundering(false);
-                world.setWeatherDuration(duration);
+                world.setWeatherDuration(durationTicks);
                 send(sender, "weather-set", world.getName(), "clear");
             }
             case "rain", "rainy" -> {
                 world.setStorm(true);
                 world.setThundering(false);
-                world.setWeatherDuration(duration);
+                world.setWeatherDuration(durationTicks);
                 send(sender, "weather-set", world.getName(), "rain");
             }
             case "thunder", "storm" -> {
                 world.setStorm(true);
                 world.setThundering(true);
-                world.setWeatherDuration(duration);
-                world.setThunderDuration(duration);
+                world.setWeatherDuration(durationTicks);
+                world.setThunderDuration(durationTicks);
                 send(sender, "weather-set", world.getName(), "thunder");
             }
             default -> sendRaw(sender, "invalid-usage", "/weather <clear|rain|thunder>");
         }
+    }
+
+    private World resolveWorld(CommandSender sender, String worldName) {
+        if (worldName != null) {
+            World w = Bukkit.getWorld(worldName);
+            if (w == null) send(sender, "player-not-found", worldName);
+            return w;
+        }
+        if (sender instanceof Player p) return p.getWorld();
+        List<World> worlds = Bukkit.getWorlds();
+        if (worlds.isEmpty()) {
+            sender.sendMessage("No worlds loaded.");
+            return null;
+        }
+        return worlds.get(0);
     }
 
     @Override

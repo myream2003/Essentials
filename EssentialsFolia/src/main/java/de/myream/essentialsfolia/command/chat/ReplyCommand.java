@@ -51,7 +51,6 @@ public class ReplyCommand extends AbstractCommand {
         self.sendMessage(Colors.parse(formatted));
         target.sendMessage(Colors.parse(formatted));
 
-        EssentialsUser targetUser = plugin.getUserManager().get(target);
-        targetUser.setLastMessageTarget(self.getUniqueId());
+        plugin.getUserManager().get(target).setLastMessageTarget(self.getUniqueId());
     }
 }

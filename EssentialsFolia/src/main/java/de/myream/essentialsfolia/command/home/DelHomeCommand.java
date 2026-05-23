@@ -36,7 +36,7 @@ public class DelHomeCommand extends AbstractCommand {
     protected List<String> tabComplete(CommandSender sender, String label, String[] args) {
         if (args.length == 1 && sender instanceof Player player) {
             EssentialsUser user = plugin.getUserManager().get(player);
-            if (user != null) return new ArrayList<>(user.getHomes().keySet());
+            return new ArrayList<>(user.getHomes().keySet());
         }
         return List.of();
     }

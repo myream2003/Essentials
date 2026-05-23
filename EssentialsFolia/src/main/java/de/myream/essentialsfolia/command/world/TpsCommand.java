@@ -16,16 +16,16 @@ public class TpsCommand extends AbstractCommand {
         if (!requirePermission(sender, "essentials.tps")) return;
 
         double[] tps = plugin.getServer().getTPS();
-        String t1 = formatTps(tps.length > 0 ? tps[0] : 20.0);
-        String t5 = formatTps(tps.length > 1 ? tps[1] : 20.0);
+        String t1  = formatTps(tps.length > 0 ? tps[0] : 20.0);
+        String t5  = formatTps(tps.length > 1 ? tps[1] : 20.0);
         String t15 = formatTps(tps.length > 2 ? tps[2] : 20.0);
 
         sender.sendMessage(Colors.parse(plugin.msgRaw("tps-format", t1, t5, t15)));
     }
 
     private String formatTps(double tps) {
-        tps = Math.min(tps, 20.0);
-        String color = tps >= 18.0 ? "&a" : tps >= 15.0 ? "&e" : "&c";
-        return color + String.format("%.2f", tps);
+        double clamped = Math.min(tps, 20.0);
+        String color = clamped >= 18.0 ? "&a" : clamped >= 15.0 ? "&e" : "&c";
+        return color + String.format("%.2f", clamped);
     }
 }

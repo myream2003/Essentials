@@ -30,11 +30,11 @@ public class MuteCommand extends AbstractCommand {
 
         EssentialsUser user = plugin.getUserManager().get(target);
 
-        long expiry = 0;
+        long expiryTime = 0;
         if (args.length > 1) {
             try {
                 long seconds = Long.parseLong(args[1]);
-                expiry = System.currentTimeMillis() + seconds * 1000L;
+                if (seconds > 0) expiryTime = System.currentTimeMillis() + seconds * 1000L;
             } catch (NumberFormatException e) {
                 sendRaw(sender, "invalid-number", args[1]);
                 return;
@@ -42,7 +42,7 @@ public class MuteCommand extends AbstractCommand {
         }
 
         user.setMuted(true);
-        user.setMuteExpiry(expiry);
+        user.setMuteExpiry(expiryTime);
         plugin.getUserManager().save(user);
         send(sender, "mute-muted", target.getName());
     }

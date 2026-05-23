@@ -3,8 +3,8 @@ package de.myream.essentialsfolia.command.moderation;
 import de.myream.essentialsfolia.EssentialsFolia;
 import de.myream.essentialsfolia.command.AbstractCommand;
 import de.myream.essentialsfolia.util.Colors;
-import org.bukkit.Bukkit;
 import org.bukkit.BanList;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -38,12 +38,11 @@ public class BanCommand extends AbstractCommand {
             return;
         }
 
-        banList.addBan(targetName, reason, (java.util.Date) null, sender.getName());
+        banList.addBan(targetName, reason, null, sender.getName());
 
         Player target = Bukkit.getPlayerExact(targetName);
         if (target != null) {
-            String kickMsg = plugin.msgRaw("ban-message", reason);
-            target.kick(Colors.parse(kickMsg));
+            target.kick(Colors.parse(plugin.msgRaw("ban-message", reason)));
         }
 
         send(sender, "ban-banned", targetName, reason);

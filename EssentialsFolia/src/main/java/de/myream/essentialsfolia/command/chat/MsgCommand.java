@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MsgCommand extends AbstractCommand {
@@ -29,7 +30,7 @@ public class MsgCommand extends AbstractCommand {
         Player target = Bukkit.getPlayerExact(args[0]);
         if (target == null) { send(sender, "player-not-found", args[0]); return; }
 
-        String message = String.join(" ", java.util.Arrays.copyOfRange(args, 1, args.length));
+        String message = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
         String senderName = sender instanceof Player p ? p.getDisplayName() : sender.getName();
 
         String format = plugin.getConfig().getString("chat.msg-format",
@@ -44,25 +45,23 @@ public class MsgCommand extends AbstractCommand {
 
         // Update reply targets
         if (sender instanceof Player sp) {
-            EssentialsUser senderUser = plugin.getUserManager().get(sp);
-            senderUser.setLastMessageTarget(target.getUniqueId());
+            plugin.getUserManager().get(sp).setLastMessageTarget(target.getUniqueId());
         }
-        EssentialsUser targetUser = plugin.getUserManager().get(target);
-        if (sender instanceof Player sp) {
-            targetUser.setLastMessageTarget(sp.getUniqueId());
-        }
+        plugin.getUserManager().get(target).setLastMessageTarget(
+                sender instanceof Player sp ? sp.getUniqueId() : null);
 
-        // Notify if AFK
-        EssentialsUser tu = plugin.getUserManager().get(target);
-        if (tu != null && tu.isAfk()) {
-            String afkMsg = plugin.msgRaw("msg-player-afk", target.getDisplayName(), tu.getAfkMessage());
+        // Notify sender if target is AFK
+        EssentialsUser targetUser = plugin.getUserManager().get(target);
+        if (targetUser.isAfk()) {
+            String afkMsg = plugin.msgRaw("msg-player-afk", target.getDisplayName(), targetUser.getAfkMessage());
             sender.sendMessage(Colors.parse(afkMsg));
         }
 
-        // Social spy
         if (plugin.getConfig().getBoolean("chat.log-private-messages", true)) {
             plugin.getLogger().info("[MSG] " + senderName + " -> " + target.getName() + ": " + message);
         }
+
+        // Social spy
         if (plugin.getConfig().getBoolean("chat.socialspy", true)) {
             for (Player spy : Bukkit.getOnlinePlayers()) {
                 if (spy.equals(sender) || spy.equals(target)) continue;

@@ -39,21 +39,19 @@ public class SpeedCommand extends AbstractCommand {
         }
 
         Player target;
-        boolean forOther = false;
+        boolean forOther;
         if (args.length > 1) {
-            if (!sender.hasPermission("essentials.speed.others")) {
-                sendRaw(sender, "no-permission");
-                return;
-            }
+            if (!sender.hasPermission("essentials.speed.others")) { sendRaw(sender, "no-permission"); return; }
             target = Bukkit.getPlayerExact(args[1]);
             if (target == null) { send(sender, "player-not-found", args[1]); return; }
             forOther = true;
         } else {
             if (!requirePlayer(sender)) return;
             target = asPlayer(sender);
+            forOther = false;
         }
 
-        // Normalize 0-10 to Bukkit's 0-1 range
+        // Normalize 0-10 to Bukkit's 0.0-1.0 range
         float normalized = speed / 10f;
         if (target.isFlying()) {
             target.setFlySpeed(normalized);
@@ -61,11 +59,11 @@ public class SpeedCommand extends AbstractCommand {
             target.setWalkSpeed(normalized);
         }
 
-        if (!forOther) {
-            send(sender, "speed-set-self", speed);
-        } else {
+        if (forOther) {
             send(sender, "speed-set-other", target.getName(), speed);
             target.sendMessage(Colors.parse(plugin.msg("speed-set-received", sender.getName(), speed)));
+        } else {
+            send(sender, "speed-set-self", speed);
         }
     }
 
